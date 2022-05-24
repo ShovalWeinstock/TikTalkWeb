@@ -18,12 +18,6 @@ function MainChat(props) {
     // The chat with the viewd contact
     const [currentChat, setCurrrentChat] = useState([]);
 
-
-    // refresh the chats of the loggesIn user
-    const refreshMsgList = function () {
-        setMessageList([...messages.find(({ username }) => (props.user.username === username)).userChats]);
-    }
-
     // search contact
     const doSearch = function (q) {
         setContactList((props.user.contacts).filter((contacts) => contacts.nickname.includes(q)))
@@ -38,9 +32,20 @@ function MainChat(props) {
     }
 
     // refresh the viewd chat
-    const refreshCurrentChat = function (contact) {
+    async function refreshCurrentChat(contact){
         setCurrrentContact(contact);
-        setCurrrentChat(messageList.find(({ nickname }) => (contact.nickname === nickname)).chats);
+        var str = "http://localhost:5142/api/contacts/alice/messages/?user=" + props.user.id;
+        var messages;
+        try {
+            let res = await fetch(str);
+             if(res.status == 200 ){ // todo and if not?
+                 message = await res.json();
+             }
+         }
+         catch (err) {
+             console.error(err);
+         }  
+        setCurrrentChat(messages);
     }
 
     // right side of the screen
