@@ -1,0 +1,252 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto, Verdana, sans-serif !important;
+    color: #595959;
+}
+
+.container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    width: 1000px;
+    max-width: 100%;
+    height: calc(100vh - 40px);
+    background: #DEDEDE;
+    display: flex;
+    border-radius: 5px;
+    border: solid 1px #ccc;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, .31);
+    padding : 0 !important;
+
+}
+
+.leftSide {
+    position: relative;
+    flex: 30%;
+    background: #DEDEDE;
+    border-right: #a8ccc3;
+}
+
+.rightSide {
+    position: relative;
+    flex: 70%;
+    background: #f5f5f5ae;
+}
+
+.header {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    background: #F5F5F5;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border: 1px solid rgb(240, 237, 237);
+}
+
+.profilePicture {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.cover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.searchChat {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+}
+
+input {
+    width: 100%;
+    outline: none;
+    border: none;
+    background: #DEDEDE;
+    padding: 6px;
+    height: 38px;
+    border-radius: 30px;
+    padding-left: 20px;
+}
+
+.chatsList {
+    position: relative;
+    overflow-y: auto;
+    height: calc(100% - 50px - 60px);
+}
+
+.contact {
+    height: 90px;
+    cursor: pointer;
+    align-items: center;
+    border-bottom: 1px solid rgb(210, 210, 210);
+    padding: 10px 15px;
+    display: flex;
+    vertical-align: baseline;
+    background: #F5F5F5;
+}
+
+.contact:hover {
+    background-color: #DEDEDE !important;
+    border-color: #DEDEDE !important;
+}
+
+h6 {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.contactDetails {
+    margin-left: 15px;
+    position: relative;
+    width: 100%;
+}
+
+.contactItemHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -15px;
+    margin-top: 10px;
+}
+
+.time {
+    font-size: 0.65em;
+    color: #aaa;
+}
+
+.lastMessege {
+    margin-top: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#addContact {
+    background-color: #DEDEDE !important;
+    border-color: #DEDEDE !important;
+    margin-left: 40px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+#addContact:hover{
+    background-color: lightgrey !important;
+}
+
+.chat {
+    width: 100%;
+}
+
+.chatInput {
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    padding: 15px;
+    display: flex;
+    bottom: 5px;
+}
+
+#chatTypingArea {
+    width: 80%;
+    outline: none;
+    border: none;
+    background: #DEDEDE;
+}
+
+#chatDropup,
+#sendMsgBtn {
+    background-color: #617a74 !important;
+    border-color: #617a74 !important;
+    color: white;
+    border-color: white !important;
+    border-radius: 0px;
+}
+
+#chatDropup:hover,
+#sendMsgBtn:hover {
+    background-color: #445551 !important;
+    border-color: #445551 !important;
+}
+
+/* .dropdown-item {
+    justify-content: space-between;
+} */
+
+.btn-success,
+.btn-success:active,
+.btn-success:visited {
+    background: #93af9c !important;
+    border-color: #93af9c !important;
+}
+
+.btn-success:hover {
+    background-color: #81a28b !important;
+    border-color: #81a28b !important;
+}
+
+.chat {
+    position: relative;
+    overflow-y: auto;
+    height: calc(100% - 50px - 60px);
+}
+
+.sentByOther {
+    padding-top: 10px;
+    margin-left: auto; 
+    margin-right: 10px;
+}
+
+.sentByMe {
+    padding-top: 10px;
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+.msgBody{
+    margin-top: 10px;
+    padding-top: 10px;
+    position: relative;
+	max-width: 500px;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.sentByOther .msgBody{
+    background: #fff;
+}
+
+.sentByMe .msgBody{
+    background: #dce8d2;
+}
+
+#imgMsg {
+    height: 300px;
+    width: 300px;
+}
+
+#addContact:focus, input:focus, input.form-control:focus {
+    outline:none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}

@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import Registration from './register/Registration';
+import Login from './login/Login';
+import MainChat from './MainChat';
+import { useState } from 'react';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    
+    const [isRegistered, setIsRegistered] = useState(true);
+    const [loggedInUser, setLoggedInUser] = useState(null);
 
+    // in case of registering, it changes to "false", and than to "true" on successfull registration
+    const changeRegState = () => {
+        setIsRegistered(!isRegistered)
+    }
+
+    const changeLoggedInUser = (u) => {
+        setLoggedInUser(u);
+    }
+    
+    const Screen = () => {
+        // if the user is not registered
+        if(!isRegistered) {
+            return <Registration changeRegState={changeRegState} changeLoggedInUser={changeLoggedInUser} />
+        }
+        // while no user logged in
+        else if(loggedInUser == null) {
+            return <Login changeRegState={changeRegState} changeLoggedInUser={changeLoggedInUser} />
+        }
+        // when logging in successfuly
+        else {
+            return <MainChat user={loggedInUser}/>
+        }
+    }
+
+    return (
+        <Screen></Screen>
+    );
+}
 export default App;
