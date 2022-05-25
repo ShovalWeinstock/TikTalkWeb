@@ -1,11 +1,11 @@
 import defauldImg from '../defaultImage.jpg';
 
-function ContactItem({id, name, onclick, lastChat }) {
+function ContactItem({id, name, last, onclick }) {
 
     // The last message of the chat with the user. If it contains an attachement, show the type of the attachement (image/video/audio).
 
-    const handleClick = function () {
-        onclick({picture: defauldImg, name: name, id: id});
+    async function  handleClick(){
+        await onclick({picture: defauldImg, name: name, id: id});
     }
 
     //if the msg is too long show a shorten verion in the contact preview
@@ -29,12 +29,12 @@ function ContactItem({id, name, onclick, lastChat }) {
                     {/* nickname */}
                     <h6>{name}</h6>
                     {/* Time of the last message */}
-                    <p className="time">{lastChat.created}</p>
+                    <p className="time">{last.created}</p>
                 </div>
 
                 <div className="lastMessage">
                     {/* The last msg in the chat */}
-                    <p className="lastMessege">{msgShortnen(lastChat.content)}</p>
+                    <p className="lastMessege">{msgShortnen(last.content)}</p>
                 </div>
 
             </div>

@@ -4,13 +4,12 @@ import { useState } from 'react'
 import ContactList from './mainChatLeft/ContactList';
 import Search from './mainChatLeft/Search';
 import TypingArea from './mainChatRight/TypingArea';
-import messages from "./dataBase/Chats";
 import MsgLoopCreator from './mainChatRight/MsgLoopCreator';
+import defauldImg from '../defaultImage.jpg';
+
 
 function MainChat(props) {
 
-    // The chats of the loggedIn user
-    const [messageList, setMessageList] = useState(messages.find(({ username }) => (props.user.username === username)).userChats);
     // The contacts of the loggedIn user
     const [contactList, setContactList] = useState(props.user.contacts);
     // The viewd contact
@@ -20,16 +19,26 @@ function MainChat(props) {
 
     // search contact
     const doSearch = function (q) {
-        setContactList((props.user.contacts).filter((contacts) => contacts.nickname.includes(q)))
+        setContactList((props.user.contacts).filter((contacts) => contacts.name.includes(q)))
     }
 
-    // refresh the contacts list of the loggedIn user
-    const refreshContactList = function (newContact) {        
-        if ( (newContact != null) ) {
-            (props.user.contacts).push(newContact);
-        }
-        setContactList(props.user.contacts);
+
+    async function  refreshContactList(){
+        var str = "http://localhost:5142/api/contacts/?user=" + props.user.id;
+        var contacts;
+        try {
+            let res = await fetch(str);
+             if(res.status == 200 ){ //todooooooooooooooooo and if not?
+                 contacts = await res.json();
+             }
+         }
+         catch (err) {
+             console.error(err);
+         }  
+        setContactList(contacts);
+        props.user.contacts = contacts;
     }
+
 
     async function refreshCurrentChat(contactId){
         var str = "http://localhost:5142/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
@@ -37,7 +46,7 @@ function MainChat(props) {
         try {
             let res = await fetch(str);
              if(res.status == 200 ){ //todooooooooooooooooo and if not?
-                 message = await res.json();
+                 messages = await res.json();
              }
          }
          catch (err) {
@@ -52,7 +61,7 @@ function MainChat(props) {
         await refreshCurrentChat(contact.id);   
     }
 
-    
+
 
     // right side of the screen
     var rightSide = (!currentContact) ?
@@ -63,9 +72,9 @@ function MainChat(props) {
                 {/*viewd contact's details*/} 
                 <div className='header'>
                     <div className='profilePicture'>
-                        <img src={currentContact.picture} className="cover"></img>
+                        <img src={defauldImg} className="cover"></img>
                     </div>
-                    <h6>{currentContact.nickname}</h6>
+                    <h6>{currentContact.name}</h6>
                 </div>
                 {/*Conversation*/}
                 <div className='chat'>
@@ -73,7 +82,7 @@ function MainChat(props) {
                 </div>
                 {/*Input area*/}
                 <div className='chatInput'>
-                    <TypingArea refreshChat={refreshCurrentChat} contactId={currentContact.id} refreshContactList={refreshContactList} />
+                    <TypingArea refreshChat={refreshCurrentChat} contactId={currentContact.id} user={props.user.id} refreshContactList={refreshContactList} />
                 </div>
             </div>
         );
@@ -88,7 +97,7 @@ function MainChat(props) {
                         <img src={props.user.profilePic} className="cover"></img>
                     </div>
                     <h6>{props.user.nickname}</h6>
-                    <AddContact refreshList={refreshContactList} refreshChatList={refreshMsgList} loggedInUser={props.user} />
+                    <AddContact refreshList={refreshContactList} contactList={contactList} loggedInUserId={props.user.id} />
                 </div>
 
                 {/*Search Chat*/}

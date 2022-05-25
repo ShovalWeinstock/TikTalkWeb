@@ -1,6 +1,3 @@
-import users from "../dataBase/users"
-import messages from "../dataBase/Chats";
-
 /*
 password validation, accordind to the folllowing:
  password must contain:
@@ -111,7 +108,6 @@ export async function register(username, nickName, password, confirmation, profi
         const newUser = { id: username, name: nickName, password: password, profilePic: profilePic, contacts: [] };
         //users.push(newUser);
         await addUser(newUser);
-        messages.push({ username: username, userChats: [] });
         return newUser
     }
     return null

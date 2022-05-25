@@ -1,8 +1,6 @@
 import { useState } from "react";
-import users from "../dataBase/users"
-import messages from "../dataBase/Chats";
 
-function AddContact({ refreshList, refreshChatList, loggedInUser }) {
+function AddContact({ refreshList, loggedInUserId, contactList }) {
 
   // username of the new contact
   const [username, setUsername] = useState('');
@@ -19,56 +17,77 @@ function AddContact({ refreshList, refreshChatList, loggedInUser }) {
   }
 
 
-  const contactExists = function (contact) {
+  const contactExists = function () {
     var contactExist = false;
-    var contacts = loggedInUser.contacts;
-    const contactNum = contacts.length;
+    const contactsNum = contactList.length;
     var i;
-    for (i = 0; i < contactNum; i++) {
-        if (contacts[i].nickname == contact.nickname  && contacts[i].picture == contact.picture) {
-            contactExist = true;
-            break;
-        }
-    }
-    return contactExist;
-}
-
-
-  const addCont = () => {
-    // when trying to add a chat with yourself
-    if (username === loggedInUser.username) {
-      document.getElementById("addContactError").innerHTML = "Can't chat with yourself";
-      return;
-    }
-    // if the user exists, add it to the contacts list
-    var found = false;
-    const usersNum = users.length;
-    var i;
-    for (i = 0; i < usersNum; i++) {
-      if (users[i].username == username) {
-        found = true;
-        var newContact = { picture: users[i].profilePic, nickname: users[i].nickname };
-        
-        // if the contact aleady exists
-        if(contactExists(newContact)) {
-          document.getElementById("addContactError").innerHTML = "Contact Exists";
-          return;
-        }
-
-        // empty message, for the user item at left side of the mainChat screen
-        var placeholderChat = [{ type: "text", sentBy: "sentByOther", content: "", currTime: "" }];
-        (messages.find(({ username }) => (loggedInUser.username === username)).userChats).push({nickname: users[i].nickname, chats: placeholderChat });
-        // resfresh the contacts list at the mainChat screen, so it will include the new contact
-        refreshList(newContact);
-        window.$('#staticBackdrop').modal('hide')
-        refreshChatList();
+    for (i = 0; i < contactsNum; i++) {
+      if (contactList[i].id == username) {
+        contactExist = true;
         break;
       }
     }
-    // if the user doesn't exist
-    if (!found) {
-      document.getElementById("addContactError").innerHTML = "Username doesn't exist";
+    return contactExist;
+  }
+
+  async function addToMe(){
+    var str = "http://localhost:5142/api/contacts/?user=" + loggedInUserId
+    try {
+        await fetch(str, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'id': username,
+              'name': nickname,
+              'server': server
+            })
+        });
+     }
+     catch (err) {
+         console.error(err);
+     }
+}
+
+async function addToOther(){
+  var str = "http://localhost:5142/api/invitations/"
+  try {
+      await fetch(str, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'from': loggedInUserId,
+            'to': username,
+            'server': server
+          })
+      });
+   }
+   catch (err) {
+       console.error(err);
+   }
+}
+
+
+async function  addCont(){
+    // when trying to add a chat with yourself
+    if (username === loggedInUserId) {
+      document.getElementById("addContactError").innerHTML = "Can't chat with yourself";
+      return;
     }
+    // if the contact aleady exists
+    if (contactExists(newContact)) {
+      document.getElementById("addContactError").innerHTML = "Contact Exists";
+      return;
+    }
+    await addToMe();
+    await addToOther();
+
+    // resfresh the contacts list at the mainChat screen, so it will include the new contact
+    await refreshList();
+    window.$('#staticBackdrop').modal('hide')
   }
 
 
@@ -92,7 +111,7 @@ function AddContact({ refreshList, refreshChatList, loggedInUser }) {
             </div>
             <div className="modal-body">
               <form>
-              
+
                 <div className="mb-3">
                   <label htmlFor="recipient-name" className="col-form-label">Nickname:</label>
                   <input type="text" className="form-control" id="recipient-name"
