@@ -78,7 +78,7 @@ async function  addCont(){
       return;
     }
     // if the contact aleady exists
-    if (contactExists(newContact)) {
+    if (contactExists()) {
       document.getElementById("addContactError").innerHTML = "Contact Exists";
       return;
     }

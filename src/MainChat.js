@@ -5,7 +5,7 @@ import ContactList from './mainChatLeft/ContactList';
 import Search from './mainChatLeft/Search';
 import TypingArea from './mainChatRight/TypingArea';
 import MsgLoopCreator from './mainChatRight/MsgLoopCreator';
-import defauldImg from '../defaultImage.jpg';
+import defauldImg from './defaultImage.jpg';
 
 
 function MainChat(props) {

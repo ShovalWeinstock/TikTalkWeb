@@ -10,7 +10,7 @@ function ContactItem({id, name, last, onclick }) {
 
     //if the msg is too long show a shorten verion in the contact preview
     var msgShortnen = function(msg){
-        if (message.length > 20){
+        if (last.length > 20){
             msg = msg.slice(0,19) + " ...";
         }
         return msg;
