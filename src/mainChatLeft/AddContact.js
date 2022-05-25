@@ -69,7 +69,9 @@ async function addToOther(){
    }
    catch (err) {
        console.error(err);
+       return false;
    }
+   return true;
 }
 
 
@@ -84,12 +86,17 @@ async function  addCont(){
       document.getElementById("addContactError").innerHTML = "Contact Exists";
       return;
     }
-    await addToMe();
-    await addToOther();
 
-    // resfresh the contacts list at the mainChat screen, so it will include the new contact
-    await refreshList();
-    window.$('#staticBackdrop').modal('hide')
+    var success = await addToOther();
+    if(success) {
+      await addToMe();
+      // resfresh the contacts list at the mainChat screen, so it will include the new contact
+      await refreshList();
+      window.$('#staticBackdrop').modal('hide')
+    }
+    else {
+      document.getElementById("addContactError").innerHTML = "Error connecting to user";
+    }
   }
 
 
@@ -118,7 +125,6 @@ async function  addCont(){
                   <label htmlFor="recipient-name" className="col-form-label">Username:</label>
                   <input type="text" className="form-control" id="recipient-name"
                     value={username} onChange={(e) => setUsername(e.target.value)}></input>
-                  <p id="addContactError" className="errorMessege"></p>
                 </div>
 
                 <div className="mb-3">
@@ -132,6 +138,8 @@ async function  addCont(){
                   <input type="text" className="form-control" id="recipient-name"
                     value={server} onChange={(e) => setServer(e.target.value)}></input>
                 </div>
+
+                <p id="addContactError" className="errorMessege"></p>
 
               </form>
             </div>

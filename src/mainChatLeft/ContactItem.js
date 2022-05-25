@@ -1,11 +1,11 @@
 import defauldImg from '../defaultImage.jpg';
 
-function ContactItem({id, name, last, lastdate, onclick }) {
+function ContactItem({id, name, last, lastdate, server, onclick }) {
 
     // The last message of the chat with the user. If it contains an attachement, show the type of the attachement (image/video/audio).
 
     async function  handleClick(){
-        await onclick({picture: defauldImg, name: name, id: id});
+        await onclick({picture: defauldImg, name: name, id: id, server: server});
     }
 
     //if the msg is too long show a shorten verion in the contact preview
