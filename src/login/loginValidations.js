@@ -1,5 +1,7 @@
+
+
 async function findUser(username, password){
-    var str = "http://localhost:5142/api/Users/"+username;
+    var str = "http://localhost:5051/api/User/" + username;
     var user;
 
     try {
@@ -19,6 +21,7 @@ async function findUser(username, password){
      }
      return null;
 }
+
 
 // if the user exists - return it. otherwise-return null
 export async function login(username, password){

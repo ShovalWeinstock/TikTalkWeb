@@ -3,7 +3,7 @@ import UploadPopup from "./UploadPopup";
 import RecordPopup from "./RecoredPopup"
 
 // bottom bar in the chat section. refreshChat arg will reload the chat
-function TypingArea({ refreshChat, contactId, user, refreshContactList }) {
+function TypingArea({ refreshChat, contactId, contactServer, user, refreshContactList }) {
 
     // the message typed in the input bar
     const [currentMsg, setCurrentMsg] = useState('');
@@ -15,7 +15,7 @@ function TypingArea({ refreshChat, contactId, user, refreshContactList }) {
 
 
     async function addToOther(content){
-        var str = "http://localhost:5142/api/transfer/";
+        var str = "http://" +  contactServer + "/api/transfer/";
         try {
             await fetch(str, {
                 method: 'POST',
@@ -35,7 +35,7 @@ function TypingArea({ refreshChat, contactId, user, refreshContactList }) {
     }
 
     async function addToMe(content){
-        var str = "http://localhost:5142/api/contacts/:" + contactId + "/messages";
+        var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + user;
         try {
             await fetch(str, {
                 method: 'POST',

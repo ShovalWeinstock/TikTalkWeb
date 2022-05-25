@@ -1,6 +1,6 @@
 import defauldImg from '../defaultImage.jpg';
 
-function ContactItem({id, name, last, onclick }) {
+function ContactItem({id, name, last, lastdate, onclick }) {
 
     // The last message of the chat with the user. If it contains an attachement, show the type of the attachement (image/video/audio).
 
@@ -29,12 +29,12 @@ function ContactItem({id, name, last, onclick }) {
                     {/* nickname */}
                     <h6>{name}</h6>
                     {/* Time of the last message */}
-                    <p className="time">{last.created}</p>
+                    <p className="time">{lastdate}</p>
                 </div>
 
                 <div className="lastMessage">
                     {/* The last msg in the chat */}
-                    <p className="lastMessege">{msgShortnen(last.content)}</p>
+                    <p className="lastMessege">{msgShortnen(last)}</p> {/*todo shorten*/}
                 </div>
 
             </div>

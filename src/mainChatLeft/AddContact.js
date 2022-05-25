@@ -13,7 +13,9 @@ function AddContact({ refreshList, loggedInUserId, contactList }) {
     // Clear errors
     document.getElementById("addContactError").innerHTML = "";
     // Clear input
-    setUsername("")
+    setUsername("");
+    setNickname("");
+    setServer("");
   }
 
 
@@ -31,7 +33,7 @@ function AddContact({ refreshList, loggedInUserId, contactList }) {
   }
 
   async function addToMe(){
-    var str = "http://localhost:5142/api/contacts/?user=" + loggedInUserId
+    var str = "http://localhost:5051/api/contacts/?user=" + loggedInUserId;
     try {
         await fetch(str, {
             method: 'POST',
@@ -51,7 +53,7 @@ function AddContact({ refreshList, loggedInUserId, contactList }) {
 }
 
 async function addToOther(){
-  var str = "http://localhost:5142/api/invitations/"
+  var str = "http://" + server + "/api/invitations/";
   try {
       await fetch(str, {
           method: 'POST',
@@ -61,7 +63,7 @@ async function addToOther(){
           body: JSON.stringify({
             'from': loggedInUserId,
             'to': username,
-            'server': server
+            'server': "localhost:5051"
           })
       });
    }
@@ -112,14 +114,7 @@ async function  addCont(){
             <div className="modal-body">
               <form>
 
-                <div className="mb-3">
-                  <label htmlFor="recipient-name" className="col-form-label">Nickname:</label>
-                  <input type="text" className="form-control" id="recipient-name"
-                    value={nickname} onChange={(e) => setNickname(e.target.value)}></input>
-                  <p id="addContactError" className="errorMessege"></p>
-                </div>
-
-                <div className="mb-3">
+              <div className="mb-3">
                   <label htmlFor="recipient-name" className="col-form-label">Username:</label>
                   <input type="text" className="form-control" id="recipient-name"
                     value={username} onChange={(e) => setUsername(e.target.value)}></input>
@@ -127,10 +122,15 @@ async function  addCont(){
                 </div>
 
                 <div className="mb-3">
+                  <label htmlFor="recipient-name" className="col-form-label">Nickname:</label>
+                  <input type="text" className="form-control" id="recipient-name"
+                    value={nickname} onChange={(e) => setNickname(e.target.value)}></input>
+                </div>
+
+                <div className="mb-3">
                   <label htmlFor="recipient-name" className="col-form-label">Server:</label>
                   <input type="text" className="form-control" id="recipient-name"
                     value={server} onChange={(e) => setServer(e.target.value)}></input>
-                  <p id="addContactError" className="errorMessege"></p>
                 </div>
 
               </form>

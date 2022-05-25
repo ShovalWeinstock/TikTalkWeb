@@ -24,7 +24,7 @@ function MainChat(props) {
 
 
     async function  refreshContactList(){
-        var str = "http://localhost:5142/api/contacts/?user=" + props.user.id;
+        var str = "http://localhost:5051/api/contacts/?user=" + props.user.id;
         var contacts;
         try {
             let res = await fetch(str);
@@ -41,7 +41,7 @@ function MainChat(props) {
 
 
     async function refreshCurrentChat(contactId){
-        var str = "http://localhost:5142/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
+        var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
         var messages;
         try {
             let res = await fetch(str);
@@ -55,7 +55,7 @@ function MainChat(props) {
         setCurrrentChat(messages);
     }
 
-    // refresh the viewd chat
+
     async function refreshCurrentContact(contact){
         setCurrrentContact(contact);
         await refreshCurrentChat(contact.id);   
@@ -82,7 +82,7 @@ function MainChat(props) {
                 </div>
                 {/*Input area*/}
                 <div className='chatInput'>
-                    <TypingArea refreshChat={refreshCurrentChat} contactId={currentContact.id} user={props.user.id} refreshContactList={refreshContactList} />
+                    <TypingArea refreshChat={refreshCurrentChat} contactId={currentContact.id} contactServer={currentContact.server} user={props.user.id} refreshContactList={refreshContactList} />
                 </div>
             </div>
         );
@@ -94,9 +94,9 @@ function MainChat(props) {
                 {/*loggedIn user's details*/}
                 <div className='header'>
                     <div className='profilePicture'>
-                        <img src={props.user.profilePic} className="cover"></img>
+                        <img src={defauldImg} className="cover"></img>
                     </div>
-                    <h6>{props.user.nickname}</h6>
+                    <h6>{props.user.name}</h6>
                     <AddContact refreshList={refreshContactList} contactList={contactList} loggedInUserId={props.user.id} />
                 </div>
 

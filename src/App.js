@@ -15,7 +15,6 @@ function App() {
     }
 
     const changeLoggedInUser = (u) => {
-        debugger
         setLoggedInUser(u);
     }
     

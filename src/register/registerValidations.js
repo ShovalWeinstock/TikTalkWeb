@@ -17,7 +17,7 @@ const isValidPassword = (password) => {
 
 // check if username aleady exists
 export async function usernameExists(username) {
-    var str = "http://localhost:5142/api/Users/"+username;
+    var str = "http://localhost:5051/api/User/" + username;
 
     try {
         let res = await fetch(str);
@@ -31,33 +31,10 @@ export async function usernameExists(username) {
      return false;
 }
 
-// export async function usernameExists(username) {
-//     var str = "http://localhost:5142/api/Users/"+username;
-//     var user;
-
-//     try {
-//         let res = await fetch(str);
-//          if(res.status == 200){
-//              user= await res.json();
-//          }
-//          else {
-//              user = null;
-//          }    
-//      }
-//      catch (err) {
-//          console.error(err);
-//      }
-
-//      if(user != null) {
-//          return true;
-//      }
-//      return false;
-// }
-
 
 async function addUser(newUser){
     try {
-        await fetch("http://localhost:5142/api/Users", {
+        await fetch("http://localhost:5051/api/User", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
