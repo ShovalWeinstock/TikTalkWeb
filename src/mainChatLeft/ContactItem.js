@@ -1,10 +1,11 @@
-function ContactItem({ picture, nickname, onclick, lastChat }) {
+import defauldImg from '../defaultImage.jpg';
+
+function ContactItem({id, name, onclick, lastChat }) {
 
     // The last message of the chat with the user. If it contains an attachement, show the type of the attachement (image/video/audio).
-    var message = (lastChat.type == "text"? lastChat.content : lastChat.type);
 
     const handleClick = function () {
-        onclick({picture: picture, nickname: nickname});
+        onclick({picture: defauldImg, name: name, id: id});
     }
 
     //if the msg is too long show a shorten verion in the contact preview
@@ -20,20 +21,20 @@ function ContactItem({ picture, nickname, onclick, lastChat }) {
 
             {/* profile picture */}
             <div className='profilePicture'>
-                <img src={picture} className="cover"></img>
+                <img src={defauldImg} className="cover"></img>
             </div>
 
             <div className="contactDetails">
                 <div className="contactItemHeader">
                     {/* nickname */}
-                    <h6>{nickname}</h6>
+                    <h6>{name}</h6>
                     {/* Time of the last message */}
-                    <p className="time">{lastChat.currTime}</p>
+                    <p className="time">{lastChat.created}</p>
                 </div>
 
                 <div className="lastMessage">
                     {/* The last msg in the chat */}
-                    <p className="lastMessege">{msgShortnen(message)}</p>
+                    <p className="lastMessege">{msgShortnen(lastChat.content)}</p>
                 </div>
 
             </div>

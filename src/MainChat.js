@@ -31,14 +31,12 @@ function MainChat(props) {
         setContactList(props.user.contacts);
     }
 
-    // refresh the viewd chat
-    async function refreshCurrentChat(contact){
-        setCurrrentContact(contact);
-        var str = "http://localhost:5142/api/contacts/alice/messages/?user=" + props.user.id;
+    async function refreshCurrentChat(contactId){
+        var str = "http://localhost:5142/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
         var messages;
         try {
             let res = await fetch(str);
-             if(res.status == 200 ){ // todo and if not?
+             if(res.status == 200 ){ //todooooooooooooooooo and if not?
                  message = await res.json();
              }
          }
@@ -47,6 +45,14 @@ function MainChat(props) {
          }  
         setCurrrentChat(messages);
     }
+
+    // refresh the viewd chat
+    async function refreshCurrentContact(contact){
+        setCurrrentContact(contact);
+        await refreshCurrentChat(contact.id);   
+    }
+
+    
 
     // right side of the screen
     var rightSide = (!currentContact) ?
@@ -67,7 +73,7 @@ function MainChat(props) {
                 </div>
                 {/*Input area*/}
                 <div className='chatInput'>
-                    <TypingArea refreshChat={refreshMsgList} currChat={currentChat} refreshContactList={refreshContactList} />
+                    <TypingArea refreshChat={refreshCurrentChat} contactId={currentContact.id} refreshContactList={refreshContactList} />
                 </div>
             </div>
         );
@@ -91,7 +97,7 @@ function MainChat(props) {
                 {/*Chats list*/}
                 <div className="chatsList">
                     {/* the list of contacts gets the current state of contacts and messages */}
-                    <ContactList contactlis={contactList} onContactClick={refreshCurrentChat} updatedMsg={messageList} />
+                    <ContactList contactlis={contactList} onContactClick={refreshCurrentContact} />
                 </div>
             </div>
 
