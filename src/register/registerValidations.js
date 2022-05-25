@@ -106,7 +106,6 @@ export async function register(username, nickName, password, confirmation, profi
             nickName = username;
         }
         const newUser = { id: username, name: nickName, password: password, profilePic: profilePic, contacts: [] };
-        //users.push(newUser);
         await addUser(newUser);
         return newUser
     }
