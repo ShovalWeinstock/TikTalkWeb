@@ -54,8 +54,9 @@ function AddContact({ refreshList, loggedInUserId, contactList }) {
 
 async function addToOther(){
   var str = "http://" + server + "/api/invitations/";
+  var res;
   try {
-      await fetch(str, {
+      res = await fetch(str, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
@@ -71,6 +72,11 @@ async function addToOther(){
        console.error(err);
        return false;
    }
+
+   if(res.status >= 400) {
+      return false;
+   }
+
    return true;
 }
 
