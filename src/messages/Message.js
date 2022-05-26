@@ -2,15 +2,16 @@ import MessageBody from "./MessageBody";
 
 function Message({ content, created, sent }) {
 
-  if(sent == "true") {
-    sent = "sentByMe"
+  var sentBy;
+  if(sent == true) {
+    sentBy = "sentByMe"
   }
   else {
-    sent = "sentByOther"
+    sentBy = "sentByOther"
   }
 
   return (
-    <div className={(sent) + " " + "msg"}>
+    <div className={(sentBy) + " " + "msg"}>
       <div className="msgBody">
         <MessageBody className="msgBody" content={content} type={"text"} />
       </div>
