@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useState } from "react";
 import UploadPopup from "./UploadPopup";
 import RecordPopup from "./RecoredPopup";
 
 // bottom bar in the chat section. refreshChat arg will reload the chat
-function TypingArea({ refreshChat, contactId, contactServer, user, refreshContactList}) {
+function TypingArea({ refreshChat, contactId, contactServer, user, refreshContactList, connection}) {
 
     // the message typed in the input bar
     const [currentMsg, setCurrentMsg] = useState('');
@@ -12,33 +11,6 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
     const [uploadImgPopup, setUploadImgPopup] = useState(false);
     const [uploadVidPopup, setUploadVidPopup] = useState(false);
     const [recordPopup, setRecordPopup] = useState(false);
-    const [ connection, setConnection ] = useState(null);
-
-    useEffect(() => {
-        const newConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5051/hubs/chat')
-            .withAutomaticReconnect()
-            .build();
-
-        setConnection(newConnection);
-    }, []);
-
-
-    useEffect(() => {
-        if (connection) {
-            connection.start()
-                .then(() => { 
-                    connection.on('ReceiveMessage', (src, dst) => {
-                        if(dst === user) {
-                            refreshContactList(null);
-                            refreshChat(src);
-                        }                       
-                    });
-                    
-                })
-                .catch(e => console.log('Connection failed: ', e));
-        }
-    }, [connection]);
 
 
     async function addToOther(content){
