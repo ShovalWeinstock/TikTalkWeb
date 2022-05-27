@@ -64,8 +64,12 @@ function MainChat(props) {
         var contacts;
         try {
             let res = await fetch(str);
+            debugger
              if(res.status === 200 ){
                  contacts = await res.json();
+             }
+             else {
+                 console.log("error connecting to server");
              }
          }
          catch (err) {
@@ -85,6 +89,9 @@ function MainChat(props) {
                 let res = await fetch(str);
                 if(res.status === 200 ){
                     messages = await res.json();
+                }
+                else {
+                    console.log("error connecting to server");
                 }
             }
             catch (err) {

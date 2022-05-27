@@ -16,7 +16,7 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
     async function addToOther(content){
         var str = "http://" +  contactServer + "/api/transfer/";
         try {
-            await fetch(str, {
+            var res = await fetch(str, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -27,6 +27,11 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
                     'content': content
                 })
             });
+
+            if (res >= 400) {
+                console.log("error connecting to server")
+            }
+
          }
          catch (err) {
              console.error(err);
@@ -36,7 +41,7 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
     async function addToMe(content){
         var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + user;
         try {
-            await fetch(str, {
+            var res = await fetch(str, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -45,6 +50,11 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
                     'content': content
                 })
             });
+
+            if (res >= 400) {
+                console.log("error connecting to server")
+            }
+
          }
          catch (err) {
              console.error(err);

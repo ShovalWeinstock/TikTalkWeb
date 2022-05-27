@@ -35,7 +35,7 @@ function AddContact({ refreshList, loggedInUserId, contactList, connection }) {
     var str = "http://localhost:5051/api/contacts/?user=" + loggedInUserId;
     var name = nickname === '' ? username : nickname;
     try {
-        await fetch(str, {
+        var res = await fetch(str, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -46,6 +46,10 @@ function AddContact({ refreshList, loggedInUserId, contactList, connection }) {
               'server': server
             })
         });
+        
+        if (res >= 400) {
+          console.log("error connecting to server")
+        }
      }
      catch (err) {
          console.error(err);

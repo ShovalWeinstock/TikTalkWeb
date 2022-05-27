@@ -34,13 +34,17 @@ export async function usernameExists(username) {
 
 async function addUser(newUser){
     try {
-        await fetch("http://localhost:5051/api/User", {
+        var res = await fetch("http://localhost:5051/api/User", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(newUser)
         });
+
+        if (res >= 400) {
+            console.log("error connecting to server")
+        }
      }
      catch (err) {
          console.error(err);
