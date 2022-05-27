@@ -1,6 +1,6 @@
 import './MainChat.css';
 import AddContact from './mainChatLeft/AddContact';
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import ContactList from './mainChatLeft/ContactList';
 import Search from './mainChatLeft/Search';
 import TypingArea from './mainChatRight/TypingArea';
@@ -13,9 +13,9 @@ function MainChat(props) {
     // The contacts of the loggedIn user
     const [contactList, setContactList] = useState(props.user.contacts);
     // The viewd contact
-    const [currentContact, setCurrrentContact] = useState(null);
     // The chat with the viewd contact
     const [currentChat, setCurrrentChat] = useState([]);
+    var currContact = useRef(null);
 
     // search contact
     const doSearch = function (q) {
@@ -40,31 +40,39 @@ function MainChat(props) {
     }
 
 
+    // function pushToCurrChat (message, sent) {
+    //     var currChat = currentChat;
+    //     var msg = { content: message.content, created: message.created, sent: sent }
+    //     currChat.push(msg);
+    //     setCurrrentChat(currChat);
+    // }
+
     async function refreshCurrentChat(contactId){
-        var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
-        var messages;
-        try {
-            let res = await fetch(str);
-             if(res.status == 200 ){ //todooooooooooooooooo and if not?
-                 messages = await res.json();
-             }
+        if(contactId == currContact.current.id) {
+            var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
+            var messages;
+            try {
+                let res = await fetch(str);
+                if(res.status == 200 ){ //todooooooooooooooooo and if not?
+                    messages = await res.json();
+                }
+            }
+            catch (err) {
+                console.error(err);
+            }  
+            setCurrrentChat(messages);
          }
-         catch (err) {
-             console.error(err);
-         }  
-        setCurrrentChat(messages);
     }
 
 
     async function refreshCurrentContact(contact){
-        setCurrrentContact(contact);
-        await refreshCurrentChat(contact.id);   
+        currContact.current = contact;
+        await refreshCurrentChat(contact.id);
     }
 
 
-
     // right side of the screen
-    var rightSide = (!currentContact) ?
+    var rightSide = (!currContact.current) ?
         <div className="rightSide" />
         :
         (
@@ -74,7 +82,7 @@ function MainChat(props) {
                     <div className='profilePicture'>
                         <img src={defauldImg} className="cover"></img>
                     </div>
-                    <h6>{currentContact.name}</h6>
+                    <h6>{currContact.current.name}</h6>
                 </div>
                 {/*Conversation*/}
                 <div className='chat'>
@@ -82,7 +90,7 @@ function MainChat(props) {
                 </div>
                 {/*Input area*/}
                 <div className='chatInput'>
-                    <TypingArea refreshChat={refreshCurrentChat} contactId={currentContact.id} contactServer={currentContact.server} user={props.user.id} refreshContactList={refreshContactList} />
+                    <TypingArea refreshChat={refreshCurrentChat} contactId={currContact.current.id} contactServer={currContact.current.server} user={props.user.id} refreshContactList={refreshContactList} />
                 </div>
             </div>
         );

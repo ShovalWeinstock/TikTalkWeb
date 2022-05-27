@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import UploadPopup from "./UploadPopup";
-import RecordPopup from "./RecoredPopup"
+import RecordPopup from "./RecoredPopup";
 
 // bottom bar in the chat section. refreshChat arg will reload the chat
-function TypingArea({ refreshChat, contactId, contactServer, user, refreshContactList }) {
+function TypingArea({ refreshChat, contactId, contactServer, user, refreshContactList}) {
 
     // the message typed in the input bar
     const [currentMsg, setCurrentMsg] = useState('');
@@ -11,7 +12,33 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
     const [uploadImgPopup, setUploadImgPopup] = useState(false);
     const [uploadVidPopup, setUploadVidPopup] = useState(false);
     const [recordPopup, setRecordPopup] = useState(false);
+    const [ connection, setConnection ] = useState(null);
 
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('http://localhost:5051/hubs/chat')
+            .withAutomaticReconnect()
+            .build();
+
+        setConnection(newConnection);
+    }, []);
+
+
+    useEffect(() => {
+        if (connection) {
+            connection.start()
+                .then(() => { 
+                    connection.on('ReceiveMessage', (src, dst) => {
+                        if(dst === user) {
+                            refreshContactList(null);
+                            refreshChat(src);
+                        }                       
+                    });
+                    
+                })
+                .catch(e => console.log('Connection failed: ', e));
+        }
+    }, [connection]);
 
 
     async function addToOther(content){
@@ -57,10 +84,19 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
         if (content != "") {
             await addToMe(content);
             await addToOther(content);
-            // reload the message in the chat again
-            await refreshChat(contactId);
+
             // refresh the contacts list for the left side of the mainChat screen. (null=no new contact)
-            await refreshContactList(null);
+            await refreshContactList(null);     
+
+            // reload the message in the chat again
+            //await refreshChat(contactId);
+            // var currTime = new Date();
+            // var date = currTime.getFullYear() + '-' + (currTime.getMonth() + 1) + '-' + currTime.getDate();
+            // var time = currTime.getHours() + ":" + currTime.getMinutes();
+            // var newMsg = {content: content, time: date + ' | ' + time }
+            // refreshChat(newMsg, true);    
+            refreshChat(contactId);    
+            await connection.invoke('SendMessage', user, contactId);
             setCurrentMsg("");
         }
     }
