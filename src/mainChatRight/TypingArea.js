@@ -53,21 +53,12 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
 
     // Add a new message
     async function addMsg(type, content) {
-        if (content != "") {
+        if (content !== "") {
             await addToMe(content);
             await addToOther(content);
-
-            // refresh the contacts list for the left side of the mainChat screen. (null=no new contact)
+            // refresh the contacts list for the left side of the mainChat screen
             await refreshContactList();     
-
-            // reload the message in the chat again
-            //await refreshChat(contactId);
-            // var currTime = new Date();
-            // var date = currTime.getFullYear() + '-' + (currTime.getMonth() + 1) + '-' + currTime.getDate();
-            // var time = currTime.getHours() + ":" + currTime.getMinutes();
-            // var newMsg = {content: content, time: date + ' | ' + time }
-            // refreshChat(newMsg, true);    
-            refreshChat(contactId);    
+            await refreshChat(contactId);    
             await connection.invoke('SendMessage', user, contactId);
             setCurrentMsg("");
         }

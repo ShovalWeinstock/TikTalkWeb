@@ -31,7 +31,6 @@ function MainChat(props) {
         setConnection(newConnection);
     }, []);
 
-
     useEffect(() => {
         if (connection) {
             connection.start()
@@ -57,12 +56,7 @@ function MainChat(props) {
     // search contact
     const doSearch = function (q) {
         setContactList((props.user.contacts).filter((contacts) => contacts.name.includes(q)))
-    }
-
-
-
-
-    
+    }   
 
     //refresh the contact list at the left bar
     async function  refreshContactList(){
@@ -70,7 +64,7 @@ function MainChat(props) {
         var contacts;
         try {
             let res = await fetch(str);
-             if(res.status === 200 ){ //todooooooooooooooooo and if not?
+             if(res.status === 200 ){
                  contacts = await res.json();
              }
          }
@@ -82,13 +76,6 @@ function MainChat(props) {
     }
 
 
-    // function pushToCurrChat (message, sent) {
-    //     var currChat = currentChat;
-    //     var msg = { content: message.content, created: message.created, sent: sent }
-    //     currChat.push(msg);
-    //     setCurrrentChat(currChat);
-    // }
-
     // refresh the currently viewd chat
     async function refreshCurrentChat(contactId){
         if(contactId === currContact.current.id) {
@@ -96,7 +83,7 @@ function MainChat(props) {
             var messages;
             try {
                 let res = await fetch(str);
-                if(res.status === 200 ){ //todooooooooooooooooo and if not?
+                if(res.status === 200 ){
                     messages = await res.json();
                 }
             }
@@ -106,6 +93,7 @@ function MainChat(props) {
             setCurrrentChat(messages);
          }
     }
+    
 
     // refresh the current contact
     async function refreshCurrentContact(contact){
