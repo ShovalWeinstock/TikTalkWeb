@@ -9,7 +9,6 @@ import defauldImg from './defaultImage.jpg';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 
-
 function MainChat(props) {
 
     // The contacts of the loggedIn user
@@ -22,6 +21,7 @@ function MainChat(props) {
     var currContact = useRef(null);
 
 
+    // handle connection
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
             .withUrl('http://localhost:5051/hubs/chat')
@@ -58,6 +58,11 @@ function MainChat(props) {
     const doSearch = function (q) {
         setContactList((props.user.contacts).filter((contacts) => contacts.name.includes(q)))
     }
+
+
+
+
+    
 
     //refresh the contact list at the left bar
     async function  refreshContactList(){

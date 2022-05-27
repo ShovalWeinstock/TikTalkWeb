@@ -18,7 +18,6 @@ function AddContact({ refreshList, loggedInUserId, contactList, connection }) {
     setServer("");
   }
 
-
   const contactExists = function () {
     var contactExist = false;
     const contactsNum = contactList.length;
@@ -34,6 +33,7 @@ function AddContact({ refreshList, loggedInUserId, contactList, connection }) {
 
   async function addToMe(){
     var str = "http://localhost:5051/api/contacts/?user=" + loggedInUserId;
+    var name = nickname === '' ? username : nickname;
     try {
         await fetch(str, {
             method: 'POST',
@@ -42,7 +42,7 @@ function AddContact({ refreshList, loggedInUserId, contactList, connection }) {
             },
             body: JSON.stringify({
               'id': username,
-              'name': nickname,
+              'name': name,
               'server': server
             })
         });
@@ -87,12 +87,20 @@ async function  addCont(){
       document.getElementById("addContactError").innerHTML = "Can't chat with yourself";
       return;
     }
+    else if (username === "") {
+      document.getElementById("addContactError").innerHTML = "Username is required";
+      return;
+    }
+    else if (server === "") {
+      document.getElementById("addContactError").innerHTML = "Server is required";
+      return;
+    }
     // if the contact aleady exists
-    if (contactExists()) {
+    else if (contactExists()) {
       document.getElementById("addContactError").innerHTML = "Contact Exists";
       return;
     }
-
+  
     var success = await addToOther();
     if(success) {
       await addToMe();
