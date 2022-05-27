@@ -58,7 +58,7 @@ function TypingArea({ refreshChat, contactId, contactServer, user, refreshContac
             await addToOther(content);
 
             // refresh the contacts list for the left side of the mainChat screen. (null=no new contact)
-            await refreshContactList(null);     
+            await refreshContactList();     
 
             // reload the message in the chat again
             //await refreshChat(contactId);

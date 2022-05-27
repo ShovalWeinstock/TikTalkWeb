@@ -38,11 +38,16 @@ function MainChat(props) {
                 .then(() => { 
                     connection.on('ReceiveMessage', (src, dst) => {
                         if(dst === props.user.id) {
-                            refreshContactList(null);
+                            refreshContactList();
                             refreshCurrentChat(src);
                         }                       
                     });
-                    
+
+                    connection.on("AcceptConnection", (dst) => {
+                        if(dst === props.user.id) {
+                            refreshContactList();
+                        }                       
+                    });
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
@@ -60,7 +65,7 @@ function MainChat(props) {
         var contacts;
         try {
             let res = await fetch(str);
-             if(res.status == 200 ){ //todooooooooooooooooo and if not?
+             if(res.status === 200 ){ //todooooooooooooooooo and if not?
                  contacts = await res.json();
              }
          }
@@ -81,12 +86,12 @@ function MainChat(props) {
 
     // refresh the currently viewd chat
     async function refreshCurrentChat(contactId){
-        if(contactId == currContact.current.id) {
+        if(contactId === currContact.current.id) {
             var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
             var messages;
             try {
                 let res = await fetch(str);
-                if(res.status == 200 ){ //todooooooooooooooooo and if not?
+                if(res.status === 200 ){ //todooooooooooooooooo and if not?
                     messages = await res.json();
                 }
             }
@@ -113,7 +118,7 @@ function MainChat(props) {
                 {/*viewd contact's details*/} 
                 <div className='header'>
                     <div className='profilePicture'>
-                        <img src={defauldImg} className="cover"></img>
+                        <img src={defauldImg} className="cover" alt="pic"></img>
                     </div>
                     <h6>{currContact.current.name}</h6>
                 </div>
@@ -137,10 +142,10 @@ function MainChat(props) {
                 {/*loggedIn user's details*/}
                 <div className='header'>
                     <div className='profilePicture'>
-                        <img src={defauldImg} className="cover"></img>
+                        <img src={defauldImg} className="cover" alt="pic"></img>
                     </div>
                     <h6>{props.user.name}</h6>
-                    <AddContact refreshList={refreshContactList} contactList={contactList} loggedInUserId={props.user.id} />
+                    <AddContact refreshList={refreshContactList} contactList={contactList} loggedInUserId={props.user.id} connection={connection} />
                 </div>
 
                 {/*Search Chat*/}

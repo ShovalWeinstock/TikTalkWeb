@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function AddContact({ refreshList, loggedInUserId, contactList }) {
+function AddContact({ refreshList, loggedInUserId, contactList, connection }) {
 
   // username of the new contact
   const [username, setUsername] = useState('');
@@ -24,7 +24,7 @@ function AddContact({ refreshList, loggedInUserId, contactList }) {
     const contactsNum = contactList.length;
     var i;
     for (i = 0; i < contactsNum; i++) {
-      if (contactList[i].id == username) {
+      if (contactList[i].id === username) {
         contactExist = true;
         break;
       }
@@ -98,6 +98,7 @@ async function  addCont(){
       await addToMe();
       // resfresh the contacts list at the mainChat screen, so it will include the new contact
       await refreshList();
+      await connection.invoke('AskToConnect', username);
       window.$('#staticBackdrop').modal('hide')
     }
     else {
