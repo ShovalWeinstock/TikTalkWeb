@@ -48,6 +48,18 @@ form {
     color: #3a4946
 }
 
+#rateUs {
+    background-color: #dce8d2 !important;
+    border-color: #dce8d2 !important;
+    color: #3a4946;
+    font-weight: bold; 
+}
+
+#rateUs:hover {
+    background-color: #cfdbca !important;
+    border-color: #cfdbca !important;
+}
+
 .btn-primary,
 .btn-primary:active,
 .btn-primary:visited {

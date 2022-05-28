@@ -1,5 +1,7 @@
+
+
 async function findUser(username, password){
-    var str = "http://localhost:5142/api/Users/"+username;
+    var str = "http://localhost:5051/api/User/" + username;
     var user;
 
     try {
@@ -18,44 +20,8 @@ async function findUser(username, password){
          return user;
      }
      return null;
-
-
-
-
-
-
-    // try {
-    //     const response = await fetch('http://localhost:5142/api/Users/' + username, {
-    //       method: 'GET',
-    //       headers: {
-    //         accept: 'application/json',
-    //       },
-    //     });
-    
-    //     if (!response.ok) {
-    //       throw new Error(`Error! status: ${response.status}`);
-    //     }
-    
-    //     const user = await response.json();
-
-    //console.log("hi")
-    //var str = "http://localhost:5142/api/Users/"+username;
-    // await fetch(str)
-    // .then((response) =>  response.json())
-    // .then((responseJson) => {console.log(responseJson)});
-
-    // const res = await fetch("http://localhost:5142/api/Users/" + username);
-    // const user = await res.json();
-    // console.log(user);
-    // if(user != null && user.password == password) {
-    //     return user;
-    // }
-    // return null;
-
-    // } catch (err) {
-    //     console.log(err);
-    // }
 }
+
 
 // if the user exists - return it. otherwise-return null
 export async function login(username, password){

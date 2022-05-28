@@ -1,9 +1,9 @@
 import { useState } from "react";
 import UploadPopup from "./UploadPopup";
-import RecordPopup from "./RecoredPopup"
+import RecordPopup from "./RecoredPopup";
 
 // bottom bar in the chat section. refreshChat arg will reload the chat
-function TypingArea({ refreshChat, currChat, refreshContactList }) {
+function TypingArea({ refreshChat, contactId, contactServer, user, refreshContactList, connection}) {
 
     // the message typed in the input bar
     const [currentMsg, setCurrentMsg] = useState('');
@@ -12,18 +12,64 @@ function TypingArea({ refreshChat, currChat, refreshContactList }) {
     const [uploadVidPopup, setUploadVidPopup] = useState(false);
     const [recordPopup, setRecordPopup] = useState(false);
 
+
+    async function addToOther(content){
+        var str = "http://" +  contactServer + "/api/transfer/";
+        try {
+            var res = await fetch(str, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'from': user,
+                    'to': contactId,
+                    'content': content
+                })
+            });
+
+            if (res >= 400) {
+                console.log("error connecting to server")
+            }
+
+         }
+         catch (err) {
+             console.error(err);
+         }
+    }
+
+    async function addToMe(content){
+        var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + user;
+        try {
+            var res = await fetch(str, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'content': content
+                })
+            });
+
+            if (res >= 400) {
+                console.log("error connecting to server")
+            }
+
+         }
+         catch (err) {
+             console.error(err);
+         }
+    }
+
     // Add a new message
-    const addMsg = (type, content) => {
-        if (content != "") {
-            var currTime = new Date();
-            var date = currTime.getFullYear() + '-' + (currTime.getMonth() + 1) + '-' + currTime.getDate();
-            var time = currTime.getHours() + ":" + currTime.getMinutes();
-            var newMgs = { type: type, sentBy: "sentByMe", content: content, currTime: date + ' | ' + time };
-            currChat.push(newMgs);
-            // reload the message in the chat again
-            refreshChat();
-            // refresh the contacts list for the left side of the mainChat screen. (null=no new contact)
-            refreshContactList(null);
+    async function addMsg(type, content) {
+        if (content !== "") {
+            await addToMe(content);
+            await addToOther(content);
+            // refresh the contacts list for the left side of the mainChat screen
+            await refreshContactList();     
+            await refreshChat(contactId);    
+            await connection.invoke('SendMessage', user, contactId);
             setCurrentMsg("");
         }
     }

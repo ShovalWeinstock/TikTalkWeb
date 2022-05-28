@@ -1,50 +1,116 @@
 import './MainChat.css';
 import AddContact from './mainChatLeft/AddContact';
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import ContactList from './mainChatLeft/ContactList';
 import Search from './mainChatLeft/Search';
 import TypingArea from './mainChatRight/TypingArea';
-import messages from "./dataBase/Chats";
 import MsgLoopCreator from './mainChatRight/MsgLoopCreator';
+import defauldImg from './defaultImage.jpg';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+
 
 function MainChat(props) {
 
-    // The chats of the loggedIn user
-    const [messageList, setMessageList] = useState(messages.find(({ username }) => (props.user.username === username)).userChats);
     // The contacts of the loggedIn user
     const [contactList, setContactList] = useState(props.user.contacts);
-    // The viewd contact
-    const [currentContact, setCurrrentContact] = useState(null);
     // The chat with the viewd contact
     const [currentChat, setCurrrentChat] = useState([]);
+    // The connection to the server
+    const [ connection, setConnection ] = useState(null);
+    // The viewd contact
+    var currContact = useRef(null);
 
 
-    // refresh the chats of the loggesIn user
-    const refreshMsgList = function () {
-        setMessageList([...messages.find(({ username }) => (props.user.username === username)).userChats]);
-    }
+    // handle connection
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('http://localhost:5051/hubs/chat')
+            .withAutomaticReconnect()
+            .build();
+
+        setConnection(newConnection);
+    }, []);
+
+    useEffect(() => {
+        if (connection) {
+            connection.start()
+                .then(() => { 
+                    connection.on('ReceiveMessage', (src, dst) => {
+                        if(dst === props.user.id) {
+                            refreshContactList();
+                            refreshCurrentChat(src);
+                        }                       
+                    });
+
+                    connection.on("AcceptConnection", (dst) => {
+                        if(dst === props.user.id) {
+                            refreshContactList();
+                        }                       
+                    });
+                })
+                .catch(e => console.log('Connection failed: ', e));
+        }
+    }, [connection]);
+
 
     // search contact
     const doSearch = function (q) {
-        setContactList((props.user.contacts).filter((contacts) => contacts.nickname.includes(q)))
+        setContactList((props.user.contacts).filter((contacts) => contacts.name.includes(q)))
+    }   
+
+    //refresh the contact list at the left bar
+    async function  refreshContactList(){
+        var str = "http://localhost:5051/api/contacts/?user=" + props.user.id;
+        var contacts;
+        try {
+            let res = await fetch(str);
+            debugger
+             if(res.status === 200 ){
+                 contacts = await res.json();
+             }
+             else {
+                 console.log("error connecting to server");
+             }
+         }
+         catch (err) {
+             console.error(err);
+         }  
+        setContactList(contacts);
+        props.user.contacts = contacts;
     }
 
-    // refresh the contacts list of the loggedIn user
-    const refreshContactList = function (newContact) {        
-        if ( (newContact != null) ) {
-            (props.user.contacts).push(newContact);
-        }
-        setContactList(props.user.contacts);
+
+    // refresh the currently viewd chat
+    async function refreshCurrentChat(contactId){
+        if(contactId === currContact.current.id) {
+            var str = "http://localhost:5051/api/contacts/" + contactId + "/messages/?user=" + props.user.id;
+            var messages;
+            try {
+                let res = await fetch(str);
+                if(res.status === 200 ){
+                    messages = await res.json();
+                }
+                else {
+                    console.log("error connecting to server");
+                }
+            }
+            catch (err) {
+                console.error(err);
+            }  
+            setCurrrentChat(messages);
+         }
+    }
+    
+
+    // refresh the current contact
+    async function refreshCurrentContact(contact){
+        currContact.current = contact;
+        await refreshCurrentChat(contact.id);
     }
 
-    // refresh the viewd chat
-    const refreshCurrentChat = function (contact) {
-        setCurrrentContact(contact);
-        setCurrrentChat(messageList.find(({ nickname }) => (contact.nickname === nickname)).chats);
-    }
 
     // right side of the screen
-    var rightSide = (!currentContact) ?
+    var rightSide = (!currContact.current) ?
         <div className="rightSide" />
         :
         (
@@ -52,9 +118,9 @@ function MainChat(props) {
                 {/*viewd contact's details*/} 
                 <div className='header'>
                     <div className='profilePicture'>
-                        <img src={currentContact.picture} className="cover"></img>
+                        <img src={defauldImg} className="cover" alt="pic"></img>
                     </div>
-                    <h6>{currentContact.nickname}</h6>
+                    <h6>{currContact.current.name}</h6>
                 </div>
                 {/*Conversation*/}
                 <div className='chat'>
@@ -62,10 +128,12 @@ function MainChat(props) {
                 </div>
                 {/*Input area*/}
                 <div className='chatInput'>
-                    <TypingArea refreshChat={refreshMsgList} currChat={currentChat} refreshContactList={refreshContactList} />
+                    <TypingArea refreshChat={refreshCurrentChat} contactId={currContact.current.id} contactServer={currContact.current.server} 
+                     user={props.user.id} refreshContactList={refreshContactList} connection={connection}/>
                 </div>
             </div>
         );
+        
 
     return (
         <div className="container">
@@ -74,10 +142,10 @@ function MainChat(props) {
                 {/*loggedIn user's details*/}
                 <div className='header'>
                     <div className='profilePicture'>
-                        <img src={props.user.profilePic} className="cover"></img>
+                        <img src={defauldImg} className="cover" alt="pic"></img>
                     </div>
-                    <h6>{props.user.nickname}</h6>
-                    <AddContact refreshList={refreshContactList} refreshChatList={refreshMsgList} loggedInUser={props.user} />
+                    <h6>{props.user.name}</h6>
+                    <AddContact refreshList={refreshContactList} contactList={contactList} loggedInUserId={props.user.id} connection={connection} />
                 </div>
 
                 {/*Search Chat*/}
@@ -86,7 +154,7 @@ function MainChat(props) {
                 {/*Chats list*/}
                 <div className="chatsList">
                     {/* the list of contacts gets the current state of contacts and messages */}
-                    <ContactList contactlis={contactList} onContactClick={refreshCurrentChat} updatedMsg={messageList} />
+                    <ContactList contactlis={contactList} onContactClick={refreshCurrentContact} />
                 </div>
             </div>
 
