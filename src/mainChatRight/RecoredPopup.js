@@ -11,6 +11,7 @@ function RecordPopup({ trigger, type, setTrigger, addMsg }) {
         /** Start recording the audio
           * @returns {Promise} - returns a promise that resolves if audio recording successfully started
           */
+         
 
         start: function () {
             //Feature Detection
