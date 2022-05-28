@@ -21,7 +21,7 @@ export async function usernameExists(username) {
 
     try {
         let res = await fetch(str);
-         if(res.status == 200){
+         if(res.status === 200){
              return true;
          }
      }
@@ -54,17 +54,17 @@ async function addUser(newUser){
 export async function register(username, nickName, password, confirmation, profilePic){
     var validInfo = true;
     // username validation:
-    if (username == '') {
+    if (username === '') {
         document.getElementById("usernameErrors").innerHTML = "Username required";
         validInfo = false;
     }
     var exists = await usernameExists(username);
-    if (exists == true) {
+    if (exists === true) {
         document.getElementById("usernameErrors").innerHTML = "Username already exists";
         validInfo = false;
     }
     // password validation:
-    if (password == '') {
+    if (password === '') {
         document.getElementById("passwordErrors").innerHTML = "Password required";
         validInfo = false;
     }
@@ -73,17 +73,17 @@ export async function register(username, nickName, password, confirmation, profi
         validInfo = false;
     }
     // password confirmation validation:
-    if (confirmation == '') {
+    if (confirmation === '') {
         document.getElementById("confirmationErrors").innerHTML = "Password confirmation required";
         validInfo = false;
     }
-    else if (password != confirmation) {
+    else if (password !== confirmation) {
         document.getElementById("confirmationErrors").innerHTML = "Passwords don't match";
         validInfo = false;
     }
     // the info is valid. create the user:
     if (validInfo) {
-        if (nickName == "") {
+        if (nickName === "") {
             nickName = username;
         }
         const newUser = { id: username, name: nickName, password: password, profilePic: profilePic, contacts: [] };
