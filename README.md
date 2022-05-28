@@ -1,12 +1,15 @@
 
 Authors:
+
 Shoval Weinstok 209540731
 
 Itamar Shachen Tov 207497769
 
+
 In order to run the project:
 
 1. open TikTalkServer -> run inner project webServerAPI:
+2. 
 https://github.com/itamar-st/TikTalkServer
 (The server is port localhost:5051. it is hard coded in the client side)
 
