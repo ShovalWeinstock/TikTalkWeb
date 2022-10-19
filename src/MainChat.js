@@ -10,7 +10,6 @@ import { HubConnectionBuilder } from '@microsoft/signalr';
 
 
 function MainChat(props) {
-
     // The contacts of the loggedIn user
     const [contactList, setContactList] = useState(props.user.contacts);
     // The chat with the viewd contact
@@ -64,7 +63,6 @@ function MainChat(props) {
         var contacts;
         try {
             let res = await fetch(str);
-            debugger
              if(res.status === 200 ){
                  contacts = await res.json();
              }
