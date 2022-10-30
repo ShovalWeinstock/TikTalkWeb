@@ -32,7 +32,9 @@ In order to run the project:
    Open the command line from the project's folder, and enter the following commands:
    
     npm install react-scripts --save
+    
     npm run build
+    
     npm start   
 
 4) Duplicate the client window, for communication between two users.
