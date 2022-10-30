@@ -1,27 +1,39 @@
-# TikTalkReviews
+# TikTalkClient
 
 Authors:
 
 Shoval Weinstok 209540731
 
-Itamar Shachen Tov 207497769
+Itamar Shachen Tov 
+
+<img width="956" alt="login" src="https://user-images.githubusercontent.com/92527489/198888592-ab290ca8-cdbf-42d5-a30c-46dcc16bf688.png">
+
+<img width="947" alt="registration" src="https://user-images.githubusercontent.com/92527489/198888598-0532cced-142e-4094-914e-444e07af27d5.png">
+
+<img width="959" alt="chat" src="https://user-images.githubusercontent.com/92527489/198888601-cd708f73-d20b-44a7-8b8b-d26216a6a173.png">
 
 
 In order to run the project:
 
-1. Open TikTalkServer -> run inner project webServerAPI:
+1. Download TikTalkServer and run inner project webServerAPI:
    
    https://github.com/itamar-st/TikTalkServer
    
    (The server is localhost:5051. it is hard coded in the client side)
    
-2. Open and run TikTalkReviews (http://localhost:5102/):
+2. Download and run TikTalkReviews (http://localhost:5102/):
    
    https://github.com/ShovalWeinstock/TikTalkReviews
 
-3. Open TikTalkClient and run it using the command "npm start":
+3. Download TikTalkClient:
    
    https://github.com/ShovalWeinstock/TikTalkClient
+   
+   Open the command line from the project's folder, and enter the following commands:
+   
+    npm install react-scripts --save
+    npm run build
+    npm start   
 
 4) Duplicate the client window, for communication between two users.
 
